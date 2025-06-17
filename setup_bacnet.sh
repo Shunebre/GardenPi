@@ -5,8 +5,26 @@ set -e
 apt-get update -y
 apt-get full-upgrade -y
 
-# Install required packages
-apt-get install -y git curl docker.io qemu-user-binfmt qemu-user-static python3-pip
+# Install required packages one by one if missing
+install_if_missing() {
+    if ! dpkg -s "$1" >/dev/null 2>&1; then
+        apt-get install -y "$1"
+    else
+        echo "$1 already installed"
+    fi
+}
+
+install_if_missing git
+install_if_missing curl
+install_if_missing docker.io
+install_if_missing python3-pip
+
+# Install qemu packages only if none are present
+if ! dpkg -s qemu-user-static >/dev/null 2>&1 && ! dpkg -s qemu-user-binfmt >/dev/null 2>&1; then
+    apt-get install -y qemu-user-static || apt-get install -y qemu-user-binfmt
+else
+    echo "qemu user binaries already installed"
+fi
 
 # Force install bacpypes
 pip3 install --force-reinstall bacpypes
