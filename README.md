@@ -1,2 +1,11 @@
 # GardenPi
-Rasrberry Pi with bacnet server, EBO server automated installation
+
+Raspberry Pi setup for BACnet and EBO Enterprise Server.
+
+Run the setup script as **root**:
+
+```bash
+sudo bash setup_bacnet.sh
+```
+
+The script performs system updates, installs all required packages, clones the BACnet and EBO repositories, pulls the Enterprise Server Docker image and sets up a `bacnet.service` systemd unit. An update helper is saved at `/root/update_bacnet.sh` which pulls the latest code and restarts the service.
